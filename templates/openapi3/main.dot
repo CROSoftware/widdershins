@@ -1,6 +1,8 @@
 <h1 id="{{=data.title_prefix}}">{{=data.api.info && data.api.info.title}} {{=data.version}}</h1>
 
+{{? false}}
 > Scroll down for {{? data.header.language_tabs.length}}code samples, {{?}}example requests and responses.{{? data.header.language_tabs.length}} Select a language for code samples from the tabs above or the mobile navigation menu.{{?}}
+{{?}}
 
 {{? data.api.info && data.api.info.description}}{{=data.api.info.description}}{{?}}
 
@@ -27,26 +29,32 @@ Base URLs:
 {{#def.security}}
 {{?}}
 
-{{ for (var r in data.resources) { }}
-{{ data.resource = data.resources[r]; }}
+{{ for (var tag in data.resources) { }}
+{{ data.resource = data.resources[tag]; }}
 
-<h1 id="{{=data.title_prefix+'-'+data.utils.slugify(r)}}">{{= r}}</h1>
+<h1 id="{{=data.title_prefix+'-'+data.utils.slugify(tag)}}">{{= tag}}</h1>
 
-{{? data.resource.description }}{{= data.resource.description}}{{?}}
+{{? data.resource.description }}
+{{= data.resource.description}}
+{{?}}
 
 {{? data.resource.externalDocs}}
 <a href="{{=data.resource.externalDocs.url}}">{{=data.resource.externalDocs.description||'External documentation'}}</a>
 {{?}}
 
-{{ for (var m in data.resource.methods) { }}
-{{ data.operationUniqueName = m; }}
-{{ data.method = data.resource.methods[m]; }}
-{{ data.operationUniqueSlug = data.method.slug; }}
-{{ data.operation = data.method.operation; }}
-{{= data.templates.operation(data) }}
-{{ } /* of methods */ }}
+{{ for (var group in data.resources[tag].groups) { }}
+## {{= group}}
 
-{{ } /* of resources */ }}
+{{ for (var name in data.resources[tag].groups[group].methods) { }}
+{{ data.method = data.resources[tag].groups[group].methods[name]; }}
+{{? (data.method.verb !== 'head' && data.method.verb !== 'options') }}
+{{= data.templates.operation(data) }}
+{{?}}
+{{ } /* methods */ }}
+
+{{ } /* groups */ }}
+
+{{ } /* resources */ }}
 
 {{? data.api.components && data.api.components.schemas }}
 # Schemas
@@ -59,6 +67,7 @@ Base URLs:
 
 <a id="schema{{=s.toLowerCase()}}"></a>
 
+{{? false}}
 {{? data.options.yaml }}
 ```yaml
 {{=data.utils.yaml.safeDump(data.utils.getSample(schema,data.options,{},data.api))}}
@@ -67,6 +76,7 @@ Base URLs:
 {{=data.utils.safejson(data.utils.getSample(schema,data.options,{},data.api),null,2)}}
 {{?}}
 ```
+{{?}}
 
 {{ var enums = []; }}
 {{ var blocks = data.utils.schemaToArray(origSchema,-1,{trim:true,join:true},data); }}
@@ -91,9 +101,9 @@ Base URLs:
 ### Properties
 {{?}}
 
-{{? block.rows.length}}|Name|Type|Required|Restrictions|Description|
-|---|---|---|---|---|{{?}}
-{{~ block.rows :p}}|{{=p.displayName}}|{{=p.safeType}}|{{=p.required}}|{{=p.restrictions||'none'}}|{{=p.description||'none'}}|
+{{? block.rows.length}}|Name|Type|Nullable|Description|
+|---|---|---|---|---|--|{{?}}
+{{~ block.rows :p}}|{{=p.displayName}}|{{=p.safeType}}|{{=p.nullable}}|{{=p.description||'none'}}|
 {{~}}
 {{~}}
 {{? (blocks[0].rows.length === 0) && (blocks.length === 1) }}

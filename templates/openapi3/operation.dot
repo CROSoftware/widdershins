@@ -1,31 +1,26 @@
-## {{= data.operationUniqueName}}
-
-{{? data.operation.operationId}}
-<a id="opId{{=data.operation.operationId}}"></a>
-{{?}}
-
+{{ data.methodLower = data.method.verb.toLowerCase(); }}
 {{ data.methodUpper = data.method.verb.toUpperCase(); }}
+{{ data.operation = data.method.operation; }}
+
 {{ data.url = data.utils.slashes(data.baseUrl + data.method.path); }}
-{{ data.parameters = data.operation.parameters; }}
+{{ data.parameters = data.method.operation.parameters; }}
 {{ data.enums = []; }}
 {{ data.utils.fakeProdCons(data); }}
 {{ data.utils.fakeBodyParameter(data); }}
 {{ data.utils.mergePathParameters(data); }}
 {{ data.utils.getParameters(data); }}
 
-{{? data.options.codeSamples || data.operation["x-code-samples"] }}
-> Code samples
-
-{{= data.utils.getCodeSamples(data) }}
-{{?}}
+### {{= data.method.name }}
 
 `{{= data.methodUpper}} {{=data.method.path}}`
 
-{{? data.operation.summary && !data.options.tocSummary}}*{{= data.operation.summary }}*{{?}}
+{{? data.method.operation.operationId}}
+<a id="opId{{=data.method.operation.operationId}}"></a>
+{{?}}
 
-{{? data.operation.description}}{{= data.operation.description }}{{?}}
+{{? data.method.operation.description}}{{= data.method.operation.description }}{{?}}
 
-{{? data.operation.requestBody}}
+{{? data.method.operation.requestBody}}
 > Body parameter
 
 {{? data.bodyParameter.exampleValues.description }}
@@ -36,6 +31,7 @@
 {{?}}
 
 {{? data.parameters && data.parameters.length }}
+{{ data.longDescs = false; }}
 {{#def.parameters}}
 {{?}}
 
@@ -43,7 +39,7 @@
 
 {{#def.callbacks}}
 
-{{ data.security = data.operation.security ? data.operation.security : data.api.security; }}
+{{ data.security = data.method.operation.security ? data.method.operation.security : data.api.security; }}
 {{? data.security && data.security.length }}
 {{#def.authentication}}
 {{??}}

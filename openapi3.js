@@ -24,41 +24,47 @@ let templates;
 
 function convertToToc(source,data) {
     let resources = {};
-    resources[data.translations.defaultTag] = { count: 0, methods: {} };
-    if (source.tags) {
-        for (let tag of source.tags) {
-            resources[tag.name] = { count: 0, methods: {}, description: tag.description, externalDocs: tag.externalDocs };
-        }
+    
+    // Index tags
+    // Requires all tags declared
+    // at top-level.
+    /////////////////////////////
+    for (let tag of source.tags) {
+        resources[tag.name] = { count: 0, groups: {}, description: tag.description, externalDocs: tag.externalDocs };
     }
-    for (var p in source.paths) {
-        for (var m in source.paths[p]) {
-            if ((m !== 'parameters') && (m !== 'summary') && (m !== 'description') && (!m.startsWith('x-'))) {
-                var method = {};
-                method.operation = source.paths[p][m];
-                method.pathItem = source.paths[p];
-                method.verb = m;
-                method.path = p;
-                method.pathParameters = source.paths[p].parameters;
-                var sMethodUniqueName = (method.operation.operationId ? method.operation.operationId : m + '_' + p).split('/').join('_');
-                if (data.options.tocSummary && method.operation.summary) {
-                    sMethodUniqueName = method.operation.summary;
+
+    // Index resources
+    //////////////////
+    for (var path in source.paths) {
+        for (var methodName in source.paths[path]) {
+            if ((methodName === 'parameters') || (methodName === 'summary') || (methodName === 'description') || (methodName.startsWith('x-'))) {
+                continue;
+            }
+            var group = source.paths[path].summary
+            var method = {};
+            method.group = group
+            method.name = source.paths[path][methodName].summary
+            console.log(method.name, methodName)
+            method.operation = source.paths[path][methodName];
+            method.pathItem = source.paths[path];
+            method.verb = methodName;
+            method.path = path;
+            method.pathParameters = source.paths[path].parameters;
+            var sMethodUniqueName = (method.operation.operationId ? method.operation.operationId : m + '_' + p).split('/').join('_');
+            if (data.options.tocSummary && method.operation.summary) {
+                sMethodUniqueName = method.operation.summary;
+            }
+            method.slug = sMethodUniqueName.toLowerCase().split(' ').join('-'); // TODO {, } and : ?
+            for (var i in method.operation.tags) {
+                var tag = method.operation.tags[i]
+                if (!resources[tag].groups[group]){
+                    resources[tag].groups[group] = { methods:{} }
                 }
-                method.slug = sMethodUniqueName.toLowerCase().split(' ').join('-'); // TODO {, } and : ?
-                var tagName = data.translations.defaultTag;
-                if (method.operation.tags && method.operation.tags.length > 0) {
-                    tagName = getTagGroup(method.operation.tags[0], data.options.tagGroups);
-                }
-                if (!resources[tagName]) {
-                    resources[tagName] = { count: 0, methods: {} };
-                }
-                resources[tagName].count++;
-                resources[tagName].methods[sMethodUniqueName] = method;
+                resources[tag].groups[group].methods[method.name] = method
             }
         }
     }
-    for (let r in resources) {
-        if (resources[r].count <= 0) delete resources[r];
-    }
+    console.log(resources)
     return resources;
 }
 

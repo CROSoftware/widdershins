@@ -354,8 +354,15 @@ function schemaToArray(schema,offset,options,data) {
             entry.description = '';
         }
 
-        if (schema.nullable === true) {
-            entry.safeType += '\\|null';
+        //TODO: Remove?
+        //if (schema.nullable === true) {
+        //    entry.safeType += '\\|null';
+        //}
+
+        //TODO: Keep nullable logic?
+        entry.nullable = true
+        if (schema.nullable === false) {
+            entry.nullable = false
         }
 
         if (schema.readOnly) entry.restrictions = data.translations.readOnly;

@@ -12,6 +12,13 @@
 
 ### {{= data.method.name }}
 
+{{? data.options.codeSamples || data.method.operation["x-code-samples"] }}
+> Code samples
+
+{{= data.utils.getCodeSamples(data) }}
+{{?}}
+
+
 `{{= data.methodUpper}} {{=data.method.path}}`
 
 {{? data.method.operation.operationId}}
@@ -31,7 +38,7 @@
 {{?}}
 
 {{? data.parameters && data.parameters.length }}
-{{ data.longDescs = false; }}
+{{ data.longDescs = true; }}
 {{#def.parameters}}
 {{?}}
 

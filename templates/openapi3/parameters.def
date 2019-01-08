@@ -2,15 +2,8 @@
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-{{~ data.parameters :p}}|{{=p.name}}|{{=p.in}}|{{=p.safeType}}|{{=p.required}}|{{=p.shortDesc || 'none'}}|
+{{~ data.parameters :p}}|`{{=p.name}}`|{{=p.in}}|{{=p.safeType}}|{{=p.required}}|{{=data.utils.escape(p.description.trim())}}|
 {{~}}
-
-{{? data.longDescs }}
-#### Detailed descriptions
-{{~ data.parameters :p}}{{? p.shortDesc !== p.description}}
-**{{=p.name}}**: {{=p.description}}{{?}}
-{{~}}
-{{?}}
 
 {{~ data.parameters :p}}
 

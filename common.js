@@ -242,8 +242,11 @@ function schemaToArray(schema,offset,options,data) {
         entry.schema = schema;
         entry.in = 'body';
         if (state.property && state.property.indexOf('/')) {
-            if (isBlock) entry.name = '*'+data.translations.anonymous+'*'
-            else entry.name = state.property.split('/')[1];
+            if (isBlock) {
+                entry.name = ''+data.translations.anonymous+''
+            } else {
+                entry.name = state.property.split('/')[1];
+            }
         }
         else if (!state.top) console.warn(state.property);
         if (!entry.name && schema.title) entry.name = schema.title;
@@ -268,7 +271,7 @@ function schemaToArray(schema,offset,options,data) {
             entry.name = '*'+entry.name+'*';
         }
         if (!state.top && !entry.name && !parent.items) {
-            entry.name = '*'+data.translations.anonymous+'*';
+            entry.name = ''+data.translations.anonymous+'';
         }
 
         // we should be done futzing with entry.name now
@@ -292,6 +295,8 @@ function schemaToArray(schema,offset,options,data) {
         entry.description = schema.description;
         entry.type = schema.type;
         entry.format = schema.format;
+        entry.default = schema.default;
+        entry.nullable = schema.nullable;
 
         entry.safeType = entry.type;
 
@@ -338,7 +343,7 @@ function schemaToArray(schema,offset,options,data) {
             if (schema.items.allOf) itemsType = 'allOf';
             if (schema.items.oneOf) itemsType = 'oneOf';
             if (schema.items.not) itemsType = 'not';
-            entry.safeType = '['+itemsType+']';
+            entry.safeType = 'array['+itemsType+']';
         }
 
         if (options.trim && typeof entry.description === 'string') {
@@ -358,12 +363,6 @@ function schemaToArray(schema,offset,options,data) {
         //if (schema.nullable === true) {
         //    entry.safeType += '\\|null';
         //}
-
-        //TODO: Keep nullable logic?
-        entry.nullable = true
-        if (schema.nullable === false) {
-            entry.nullable = false
-        }
 
         if (schema.readOnly) entry.restrictions = data.translations.readOnly;
         if (schema.writeOnly) entry.restrictions = data.translations.writeOnly;

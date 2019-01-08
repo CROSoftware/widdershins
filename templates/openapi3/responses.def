@@ -14,7 +14,7 @@
 
 |Status|Meaning|Schema|Description|
 |---|---|---|---|
-{{~ data.responses :r}}|{{=r.status}}|{{=r.meaning}}|{{=r.schema}}|{{=r.description || 'none'}}|
+{{~ data.responses :r}}|`{{=r.status}}`|{{=r.meaning}}|{{=r.schema}}|{{=r.description || 'none'}}|
 {{~}}
 
 {{ data.responseSchemas = false; }}

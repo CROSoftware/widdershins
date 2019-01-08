@@ -44,7 +44,6 @@ function convertToToc(source,data) {
             var method = {};
             method.group = group
             method.name = source.paths[path][methodName].summary
-            console.log(method.name, methodName)
             method.operation = source.paths[path][methodName];
             method.pathItem = source.paths[path];
             method.verb = methodName;
@@ -64,7 +63,6 @@ function convertToToc(source,data) {
             }
         }
     }
-    console.log(resources)
     return resources;
 }
 
@@ -174,6 +172,7 @@ function getParameters(data) {
             param.originalType = pSchema.type;
             param.safeType = pSchema.type || common.inferType(pSchema);
             if (pSchema.format) {
+                param.format = pSchema.format
                 param.safeType = param.safeType+'('+pSchema.format+')';
             }
             if ((param.safeType === 'array') && (pSchema.items)) {
@@ -181,13 +180,17 @@ function getParameters(data) {
                 if (!itemsType) {
                     itemsType = common.inferType(pSchema.items);
                 }
-                param.safeType = 'array['+itemsType+']';
+                param.safeType = 'array ['+itemsType+']';
+                param.format = param.itemsType
             }
             if (pSchema["x-widdershins-oldRef"]) {
                 let schemaName = pSchema["x-widdershins-oldRef"].replace('#/components/schemas/','');
                 param.safeType = '['+schemaName+'](#schema'+schemaName.toLowerCase()+')';
             }
-            if (param.refName) param.safeType = '['+param.refName+'](#schema'+param.refName.toLowerCase()+')';
+            if (param.refName){
+                param.safeType = '['+param.refName+'](#schema'+param.refName.toLowerCase()+')';
+                param.format = param.safeType
+            }
         }
         if (pSchema) {
             param.exampleValues.object = param.example || param.default || common.getSample(pSchema,data.options,{skipReadOnly:true},data.api);
@@ -661,6 +664,15 @@ function convertInner(api, options, callback) {
     data.utils.join = function(s) {
         return s.split('\r').join('').split('\n').join(' ').trim();
     };
+    data.utils.escape = function(s) {
+        return s
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;")
+         .replace(/\n/g, ' ');
+    }
 
     let content = '---\n'+yaml.dump(header)+'\n---\n\n';
         data = options.templateCallback('main', 'pre', data);

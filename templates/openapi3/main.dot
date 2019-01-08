@@ -42,11 +42,15 @@ Base URLs:
 <a href="{{=data.resource.externalDocs.url}}">{{=data.resource.externalDocs.description||'External documentation'}}</a>
 {{?}}
 
-{{ for (var group in data.resources[tag].groups) { }}
-## {{= group}}
+{{ group_names = Object.keys(data.resources[tag].groups).sort(); }}
 
-{{ for (var name in data.resources[tag].groups[group].methods) { }}
-{{ data.method = data.resources[tag].groups[group].methods[name]; }}
+{{ for (var i in group_names) { }}
+{{ group_name = group_names[i]; }}
+## {{= group_name}}
+{{ method_names = Object.keys(data.resources[tag].groups[group_name].methods).sort(); }}
+{{ for (var j in method_names) { }}
+{{ method_name = method_names[j];}}
+{{ data.method = data.resources[tag].groups[group_name].methods[method_name]; }}
 {{? (data.method.verb !== 'head' && data.method.verb !== 'options') }}
 {{= data.templates.operation(data) }}
 {{?}}
@@ -64,10 +68,6 @@ Base URLs:
 {{ var schema = data.api.components.schemas[s]; }}
 
 <h2 id="tocS{{=s.toLowerCase()}}">{{=s}}</h2>
-
-<a id="schema{{=s.toLowerCase()}}"></a>
-
-{{? false}}
 {{? data.options.yaml }}
 ```yaml
 {{=data.utils.yaml.safeDump(data.utils.getSample(schema,data.options,{},data.api))}}
@@ -76,11 +76,13 @@ Base URLs:
 {{=data.utils.safejson(data.utils.getSample(schema,data.options,{},data.api),null,2)}}
 {{?}}
 ```
-{{?}}
 
-{{ var enums = []; }}
-{{ var blocks = data.utils.schemaToArray(origSchema,-1,{trim:true,join:true},data); }}
-{{ for (var block of blocks) {
+
+<a id="schema{{=s.toLowerCase()}}"></a>
+
+{{ var enums = [];
+   var blocks = data.utils.schemaToArray(origSchema,-1,{trim:true,join:true},data);
+   for (var block of blocks) {
      for (var p of block.rows) {
        if (p.schema && p.schema.enum) {
          for (var e of p.schema.enum) {
@@ -98,13 +100,25 @@ Base URLs:
 {{?}}
 
 {{? block===blocks[0] }}
-### Properties
 {{?}}
+{{ outputTable = ''; }}
+{{~ block.rows :p}}
+{{ 
+   if (outputTable.length < 1) {
+     outputTable += "|Name|Type|Description|\n|---|---|---|\n";
+   }
 
-{{? block.rows.length}}|Name|Type|Nullable|Description|
-|---|---|---|---|---|--|{{?}}
-{{~ block.rows :p}}|{{=p.displayName}}|{{=p.safeType}}|{{=p.nullable}}|{{=p.description||'none'}}|
+   typeDesc = p.safeType;
+
+   description = '-';
+   if (p.description) {
+     description = p.description;
+   }
+
+   outputTable += "|`" + p.displayName + "`|" + typeDesc + "|" + description + "|\n";
+}}
 {{~}}
+{{= outputTable }}
 {{~}}
 {{? (blocks[0].rows.length === 0) && (blocks.length === 1) }}
 *None*

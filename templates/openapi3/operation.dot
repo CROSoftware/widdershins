@@ -46,9 +46,11 @@
 
 {{#def.callbacks}}
 
+{{? false }}
 {{ data.security = data.method.operation.security ? data.method.operation.security : data.api.security; }}
 {{? data.security && data.security.length }}
 {{#def.authentication}}
 {{??}}
 {{#def.authentication_none}}
+{{?}}
 {{?}}

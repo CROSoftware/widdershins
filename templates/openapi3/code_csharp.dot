@@ -1,0 +1,29 @@
+using System;
+using System.Net;
+using System.Collections.Specialized;
+
+namespace CROSoftware
+{
+  public class DemoClient
+  {
+      static public void Main ()
+      {
+          WebClient client = new WebClient();
+
+          // URL    
+          String url = "{{=data.url}}";
+
+          // Headers{{?data.headerParameters.length}}
+          {{~ data.headerParameters :p:index}}client.Headers.Add("{{=p.name}}", "{{=p.exampleValues.object}}");
+          {{~}}{{?}}{{?data.requiredParameters.length}}
+          // Parameters
+          NameValueCollection parameters = new NameValueCollection();
+          {{~ data.requiredParameters :p:index}}parameters.Add("{{=p.name}}", "{{=p.exampleValues.object}}");
+          {{~}}{{?}}{{?data.methodUpper === 'GET'}}
+          string json = client.DownloadString(url);
+          Console.WriteLine(json);{{??}}
+          byte[] json = client.UploadValues(url, "POST", parameters);
+          Console.WriteLine(System.Text.Encoding.Default.GetString(json));{{?}}
+      }
+  }
+}

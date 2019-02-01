@@ -27,6 +27,15 @@
 
 {{? data.method.operation.description}}{{= data.method.operation.description }}{{?}}
 
+{{? true }}
+{{ data.security = data.method.operation.security ? data.method.operation.security : data.api.security; }}
+{{? data.security && data.security.length }}
+{{? false }}{{#def.authentication}}{{?}}
+{{??}}
+{{#def.authentication_none}}
+{{?}}
+{{?}}
+
 {{? data.method.operation.requestBody}}
 > Body parameter
 
@@ -45,12 +54,3 @@
 {{#def.responses}}
 
 {{#def.callbacks}}
-
-{{? false }}
-{{ data.security = data.method.operation.security ? data.method.operation.security : data.api.security; }}
-{{? data.security && data.security.length }}
-{{#def.authentication}}
-{{??}}
-{{#def.authentication_none}}
-{{?}}
-{{?}}

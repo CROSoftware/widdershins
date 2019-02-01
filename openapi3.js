@@ -569,7 +569,17 @@ function getAuthenticationStr(data) {
 function convertInner(api, options, callback) {
     let defaults = {};
     defaults.title = 'API';
-    defaults.language_tabs = [{ 'shell': 'Shell' }, { 'http': 'HTTP' }, { 'javascript': 'JavaScript' }, { 'javascript--nodejs': 'Node.JS' }, { 'ruby': 'Ruby' }, { 'python': 'Python' }, { 'java': 'Java' }, { 'go': 'Go' }];
+    defaults.language_tabs = [
+        {'csharp': 'C# 2.0'},
+        { 'shell': 'Shell' },
+       // { 'http': 'HTTP' },
+        { 'javascript': 'JS' },
+      //  { 'javascript--nodejs': 'Node.JS' },
+        { 'ruby': 'Ruby' },
+        { 'python': 'Python' },
+        { 'java': 'Java' },
+      // { 'go': 'Go' 
+    ];
     defaults.toc_footers = [];
     defaults.includes = [];
     defaults.search = true;

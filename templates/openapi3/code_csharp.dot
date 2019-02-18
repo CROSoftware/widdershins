@@ -22,7 +22,7 @@ namespace CROSoftware
           {{~}}{{?}}{{?data.methodUpper === 'GET'}}
           string json = client.DownloadString(url);
           Console.WriteLine(json);{{??}}
-          byte[] json = client.UploadValues(url, "POST", parameters);
+          byte[] json = client.UploadValues(url, "{{=data.method.verb.toUpperCase()}}", parameters);
           Console.WriteLine(System.Text.Encoding.Default.GetString(json));{{?}}
       }
   }

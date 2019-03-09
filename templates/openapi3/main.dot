@@ -54,11 +54,13 @@ Base URLs:
 {{? (data.method.verb !== 'head' && data.method.verb !== 'options') }}
 {{= data.templates.operation(data) }}
 {{?}}
+
 {{ } /* methods */ }}
 
 {{ } /* groups */ }}
 
 {{ } /* resources */ }}
+
 
 {{? data.api.components && data.api.components.schemas }}
 # Schemas

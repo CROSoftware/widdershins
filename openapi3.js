@@ -201,7 +201,7 @@ function getParameters(data) {
                 param.exampleValues.json = "'"+param.exampleValues.object+"'";
             }
         }
-        if (param.description === 'undefined') { // yes, the string
+        if (!param.description || param.description === 'undefined') { // yes, the string
             param.description = '';
         }
         if ((typeof param.description !== 'undefined') && (typeof param.description === 'string')) {

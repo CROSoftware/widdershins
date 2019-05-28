@@ -181,7 +181,7 @@ function getParameters(data) {
                     itemsType = common.inferType(pSchema.items);
                 }
                 param.safeType = 'array ['+itemsType+']';
-                param.format = param.itemsType
+                param.format = param.itemsType;
             }
             if (pSchema["x-widdershins-oldRef"]) {
                 let schemaName = pSchema["x-widdershins-oldRef"].replace('#/components/schemas/','');

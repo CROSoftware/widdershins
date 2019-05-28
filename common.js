@@ -339,6 +339,11 @@ function schemaToArray(schema,offset,options,data) {
                     if (target.description) entry.description = '['+target.description+']';
                 }
             }
+            else
+            {
+                entry.description = schema.items.description;
+            }
+
             if (schema.items.anyOf) itemsType = 'anyOf';
             if (schema.items.allOf) itemsType = 'allOf';
             if (schema.items.oneOf) itemsType = 'oneOf';

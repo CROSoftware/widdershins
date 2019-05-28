@@ -1,0 +1,84 @@
+
+## Unreleased
+
+### Changed
+- Log GPS event now accepts application/json instead of gps_event_json parameter.
+- Create/update customer changed from request parameter to JSON customer profile.
+- Create/update customer creates/updates customer addresses.
+- Create/update customer creates/updates billing zone codes.
+
+
+### Added
+- GET /customer
+- GET /customer/{customer_id}
+- PATCH /customer/{customer_id}
+- GET /customer/{customer_id}/location
+- GET /customer/{customer_id}/location/{location_id}
+- POST /customer/{customer_id}/location/{location_id}
+- PATCH /customer/{customer_id}/location/{location_id}
+- GET /customer/{customer_id}/address
+- POST /customer/{customer_id}/address
+- GET /customer/{customer_id}/address/{address_id}
+- PATCH /customer/{customer_id}/address/{address_id}
+- DELETE /customer/{customer_id}/address/{address_id}
+- GET /customer/{customer_id}/contact
+- POST /customer/{customer_id}/contact
+- GET /customer/{customer_id}/contact/{contact_id}
+- PATCH /customer/{customer_id}/contact/{contact_id}
+- POST /location/{location_id}/customer
+
+
+### Fixed
+- Invalid access token no longer returns 500 internal server error.
+- <jwt-access-token> corrected to <access-token> in doc.
+- Validation issues.
+- Filtering issues.
+
+
+## [0.0.0] - 2019/02/26
+
+### Changed
+- Requests using unassigned tenant IDs now return 403 instead of 200.
+- Unit test generator now generates test cases for third party roles in DAL.
+- Removed predicate and acl (replaced with policy management).
+- Changed unit tests from exhaustive to single-sequential.
+- Removed tenant_id params (redundant with context)
+- Indexed params as kw args for policy enforcement
+- Added tenant/location check to policy enforcement
+
+### Added
+- POST /location/{location_id}/customer
+- PATCH /location/{location_id}/customer/{customer_id}
+- GET /location/{location_id}/customer/{customer_id}
+- DELETE /location/{location_id}/customer/{customer_id}
+- POST /location/{location_id}/gps_event
+- GET /tenant
+- Added filters to list job endpoint (schedule date range, deleted, completed, driver id, truck id).
+
+### Fixed
+- Issue with date comparisons during input validation (aware vs naive)
+- Permssions issues found during unit testing (policy info point config)
+- ThirdPartyDriver permission issues with List Customers.
+- Permissions issues found during acceptance testing.
+
+## [0.0.0] - 2019/02/08
+
+### Added
+- Initial implementations for:
+  - GET /location/{location_id}/driver
+  - GET /location/{location_id}/driver/{driver_id}
+  - GET /location/{location_id}/customer
+  - POST /hauler
+  - POST /hauler/{hauler_id}/connection
+  - GET /hauler/{hauler_id}
+  - GET /hauler
+  - GET /hauler/{hauler_id}/connection
+  - GET /location
+  - GET /location/{location_id}
+  - PATCH /location/{location_id}/job/{job_id}
+  - GET /location/{location_id}/job/{job_id}
+  - GET /location/{location_id}/job
+  - GET /location/{location_id}/truck/{truck_id}
+  - GET /location/{location_id}/truck
+  - PATCH /location/{location_id}/truck/{truck_id}
+  

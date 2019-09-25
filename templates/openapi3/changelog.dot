@@ -1,12 +1,80 @@
 
-## Unreleased
+## [1.0.2] - 2019/09/25
+
+### Added
+- Added GET /locations/{location_id}/materials.
+- Added GET /locations/{location_id}/users.
+- Added GET /locations/{location_id}/users/{user_id}.
+- Added scale_ticket field to JobModel.
+- Added webhooks callbacks.
+- Added webhook ping endpoint to API.
+- Fixed issue in user location authorization for Admin roles.
+
+### Changed
+- Changed field inputs type validation to restrict to specified type (e.g. JSON int not implicitly converted to string).
+- Changed requests with Admin users to also auth for Dispatched authorized calls.
+- Renamed GET /customers 'filter_name' param to 'name'.
+
+### Fixed
+- Fixed header param naming issue in customer locations.
+- Fixed authorization header spec.
+- Fixed customer_id/location_id mixup in the CustomerLocation endpoints.
+- Fixed bug in date filter validation.
+- Fixed exception handling for missing/invalid endpoint arguments.
+- Fixed exception bug and indentation error.
+
+
+## [1.0.1] - 2019/07/30
+
+### Fixed
+- Un-flipped Customer ID and Location ID on the "Add customer to location" endpoint.
+
+### Added
+- Added filter_last_update_gte and filter_created_on_gte to GET /customers and GET /location/{loc_id}/jobs.
+- Changed requests with Admin users to also auth for Dispatcher authorized calls.
+
+### Changed
+- Renamed GET /customers 'filter_name' param to 'name'.
+
+## [0.0.0] - 2019/04/16
+
+### Fixed
+- Changed MultiTenantSAConnector to raise InputError on connection if missing tenant id.
+- Fixed fence post error in paged queries logic.
+
+### Added
+- Exception handling to endpoint arg processing.
+- Support for X-REQUEST-ID header.
+- 'materials' list to job records (for GET /locations/{location_id}/jobs/{job_id} only).
+
+### Changed
+- Changed customer contact and address to Dispatcher role access (removed ThirdPartyDispatcher role access).
+- Changed argument validation to raise InputError on invalid signature profile (vs HTTP 500).
+- Changed scope list support (vs single scope).
+- Changed tenant db session logic to raise InputError on x-tenant-id missing.
+
+
+## [0.0.0] - 2019/04/09
+
+### Fixed
+- Improved /location/{location_id}/customers GET query performance.
+
+### Added
+- No external adds.
+
+### Changed
+- Pluralized endpoint URLs.
+- Changed CustomerLocationApi.list_customers to RoleGroup.Authenticated.
+
+
+## [0.0.0] - 2019/03/11
 
 ### Changed
 - Log GPS event now accepts application/json instead of gps_event_json parameter.
 - Create/update customer changed from request parameter to JSON customer profile.
 - Create/update customer creates/updates customer addresses.
 - Create/update customer creates/updates billing zone codes.
-
+- Policy verification moved to function entry points.
 
 ### Added
 - GET /customer
@@ -39,11 +107,6 @@
 
 ### Changed
 - Requests using unassigned tenant IDs now return 403 instead of 200.
-- Unit test generator now generates test cases for third party roles in DAL.
-- Removed predicate and acl (replaced with policy management).
-- Changed unit tests from exhaustive to single-sequential.
-- Removed tenant_id params (redundant with context)
-- Indexed params as kw args for policy enforcement
 - Added tenant/location check to policy enforcement
 
 ### Added
@@ -57,9 +120,7 @@
 
 ### Fixed
 - Issue with date comparisons during input validation (aware vs naive)
-- Permssions issues found during unit testing (policy info point config)
 - ThirdPartyDriver permission issues with List Customers.
-- Permissions issues found during acceptance testing.
 
 ## [0.0.0] - 2019/02/08
 

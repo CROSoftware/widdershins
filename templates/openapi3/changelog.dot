@@ -1,3 +1,15 @@
+## [1.0.3] - 2019/10/21
+
+### Added
+- Parameter max_address_edit_distance to POST /locations/{location_id}/customers.
+
+### Changed
+- Duplicate customers created via POST /locations/{location_id}/customers now return 409 conflict.
+- Updated parent_id, line_2, line_3, line_4 to be optional fields for POST /locations/{location_id}/customers.
+
+### Fixed
+- Added missing 'id' field to /tenant return results.
+
 
 ## [1.0.2] - 2019/09/25
 
